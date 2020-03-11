@@ -3,7 +3,7 @@
 set -e
 
 rm -rf loaded/
-rm -f ingest.log
+rm -f ingest.log extract.log
 
 psql -Xf stats.sql
 psql -Xf rollups.sql

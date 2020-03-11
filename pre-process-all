@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# $1 should be the directory to process files from
+find $1 -type f \
+| sort \
+| time xargs -n 1 -P 8 ./pre-process \
+| tee -a preprocess.log 2> preprocess.err
