@@ -3,4 +3,10 @@ if [ -f ingest.log ] ; then
   cat ingest.log
 fi
 
-find /data/github -type f | sort | time xargs -n 4 -P 6  ./load-events.sh | tee -a ingest.log 2> ingest.err
+script=${1:-./load-events.sh}
+source=${2:-/data/github/raw/}
+
+find $source -type f \
+| sort \
+| time xargs -n 4 -P 6  $script \
+| tee -a ingest.log 2> ingest.err
