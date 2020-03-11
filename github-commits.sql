@@ -29,8 +29,8 @@ CREATE TABLE daily_github_commits (
 );
 
 SET citus.shard_count TO 160;
-SELECT create_distributed_table('github_commits', 'repo_id', colocate_with := 'github_events');
-SELECT create_distributed_table('daily_github_commits', 'repo_id', colocate_with := 'github_events');
+SELECT create_distributed_table('github_commits', 'repo_id', colocate_with := 'none');
+SELECT create_distributed_table('daily_github_commits', 'repo_id', colocate_with := 'github_commits');
 
 INSERT INTO rollups VALUES ('github_commits', 'github_events', 'github_events_event_id_seq')
 ON CONFLICT (name) DO UPDATE SET last_aggregated_id = 0;
@@ -69,7 +69,7 @@ BEGIN
       FROM (
         SELECT 
           event_id,
-          repo_id,
+          (data->'repo'->>'id')::bigint repo_id,
           (data->'repo'->>'name') repo_name,
           (data->>'created_at')::timestamptz created_at,
           (data->'actor'->>'login')::text actor_login,

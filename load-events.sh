@@ -13,7 +13,7 @@ if [ -f "$marker" ] ; then
 fi
 
 psql -X >$tmpfile <<EOF
-\COPY github_events (repo_id, data) FROM PROGRAM 'gzip -dc $*'
+\COPY github_events (data) FROM PROGRAM 'cat $* | gzip -d | grep -v "\\u0000"' WITH (format 'csv', quote e'\x01', delimiter e'\x02', escape e'\x01')
 EOF
 
 if [ -s $tmpfile ]; then
