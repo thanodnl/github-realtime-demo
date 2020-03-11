@@ -2,6 +2,9 @@
 
 set -e
 
+rm -rf loaded/
+rm -f ingest.log
+
 psql -Xf stats.sql
 psql -Xf rollups.sql
 psql -Xf github-events.sql
